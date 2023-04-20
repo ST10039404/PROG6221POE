@@ -4,14 +4,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{7806DD24-C30D-4AD6-B095-5750BE4A22DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Part1", "Part1", "{F9662FD3-71DC-420B-817D-A7C7957CB5F7}"
 	ProjectSection(SolutionItems) = preProject
 		PROG6221POE\Program.cs = PROG6221POE\Program.cs
-		PROG6221POE\Recipe.cs = PROG6221POE\Recipe.cs
+		Recipe.cs = Recipe.cs
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F9662FD3-71DC-420B-817D-A7C7957CB5F7} = {7806DD24-C30D-4AD6-B095-5750BE4A22DE}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {140F0D99-8586-4D62-B5F3-3302C2D67AD8}
