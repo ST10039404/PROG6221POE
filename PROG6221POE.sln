@@ -8,7 +8,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Part1", "Part1", "{F9662FD3-71DC-420B-817D-A7C7957CB5F7}"
 	ProjectSection(SolutionItems) = preProject
 		PROG6221POE\Program.cs = PROG6221POE\Program.cs
-		Recipe.cs = Recipe.cs
+		PROG6221POE\Recipe.cs = PROG6221POE\Recipe.cs
 	EndProjectSection
 EndProject
 Global
