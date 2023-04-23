@@ -3,12 +3,14 @@
 //////////////
 
 using System;
+using System.ComponentModel;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ConsoleRecipe
 {
-    Recipe yourRecipe = new Recipe();
-public static void Main()
+    private Recipe yourRecipe;
+
+    public static void Main()
     {
         ConsoleRecipe listOfRecipes = new ConsoleRecipe();
         Console.WriteLine("Hi, Welcome to Sanele's Simple Recipe Maker!");
@@ -23,35 +25,80 @@ public void MainMenu()
         switch (Console.Read())
         {
             case 1:
-                GenerateNewRecipe();
+                this.yourRecipe = GenerateNewRecipe();
                 break;
             case 2:
-                DisplayRecipe();
+                DisplayRecipe(yourRecipe);
                 break;
             case 3:
-
+                MultiplyFactorial(yourRecipe);
                 break;
-            case 4:
-                
             default:
                 MainMenu();
                 break;
         }
     }
 
-public void GenerateNewRecipe()
+    public Recipe GenerateNewRecipe()
     {
-
+        int numIngredients;
+        int numSteps;
+        Console.WriteLine("");
+        numIngredients = Console.Read();
+        Console.WriteLine("");
+        numSteps = Console.Read();
+        Recipe returnedRecipe = new Recipe(numIngredients, numSteps);
+        return returnedRecipe;
     }
 
-public void DisplayRecipe()
+public void DisplayRecipe(Recipe yourRecipe)
     {
-        Console.WriteLine("", this.yourRecipe);
+        object[][] yourRecipeIngredients = yourRecipe.getIngredientsArray(); 
+        string[] yourRecipeSteps = yourRecipe.getStepsArray();
+        int ingredientQuantity;
+        for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
+        {
+            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i][1]) * Convert.ToInt32(yourRecipeIngredients[i][3]));
+            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i+1, yourRecipeIngredients[i][0], ingredientQuantity , yourRecipeIngredients[i][2]);
+        }
+        
+        for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
+        {
+            Console.WriteLine("///////////////////\nStep {0}: {1}", i, yourRecipeSteps[i]);
+        }
+
+        Console.WriteLine("\n///////////////////\n");
     }
 
-public void test()
+public void MultiplyFactorial(Recipe yourRecipe)
     {
+        object[][] yourRecipeIngredients = yourRecipe.getIngredientsArray();
+        Console.WriteLine("\n///////////////////\nPlease enter the number to multiply your\n   1.   Half Ingredients\n   2.   Double ingredients\n   3.   Triple ingredient quantities\n   4.   Return to normal\n Anything else");
+        switch(Console.Read())
+        {
+            case 1:
+                yourRecipeIngredients[0][3] = 3;
+                Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
+                MainMenu();
+                break;
+            case 2:
+                Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
+                MainMenu();
+                break;
+            case 3:
+                Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
+                MainMenu();
+                break;
+            case 4:
+                Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
+                MainMenu();
+                break;
+            default:
+                Console.WriteLine("Ingredient quantities have been \nReturning to main menu.");
+                MainMenu();
+                break;
 
+        }
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
