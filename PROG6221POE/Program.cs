@@ -41,13 +41,31 @@ public void MainMenu()
 
     public Recipe GenerateNewRecipe()
     {
-        int numIngredients;
-        int numSteps;
-        Console.WriteLine("");
-        numIngredients = Console.Read();
-        Console.WriteLine("");
-        numSteps = Console.Read();
-        Recipe returnedRecipe = new Recipe(numIngredients, numSteps);
+        string recipeName = null;
+        int numIngredients = 0;
+        int numSteps = 0;
+
+        Console.WriteLine("///////////////////");
+        while (recipeName == null)
+        {
+            Console.WriteLine("Input the name of your recipe >>>  ");
+            recipeName = Console.ReadLine();
+        }
+
+        while (numIngredients <= 0)
+        {
+            Console.WriteLine("Input the number of ingredients >>>  ");
+            numIngredients = Console.Read();
+        }
+
+        while (numSteps <= 0)
+        {
+            Console.WriteLine("Input the number of steps for your recipe >>>  ");
+            numSteps = Console.Read();
+        }
+        Console.WriteLine("///////////////////");
+
+        Recipe returnedRecipe = new Recipe(recipeName,numIngredients, numSteps);
         return returnedRecipe;
     }
 
@@ -56,6 +74,9 @@ public void DisplayRecipe(Recipe yourRecipe)
         object[][] yourRecipeIngredients = yourRecipe.getIngredientsArray(); 
         string[] yourRecipeSteps = yourRecipe.getStepsArray();
         int ingredientQuantity;
+
+
+
         for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
         {
             ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i][1]) * Convert.ToInt32(yourRecipeIngredients[i][3]));
@@ -77,24 +98,27 @@ public void MultiplyFactorial(Recipe yourRecipe)
         switch(Console.Read())
         {
             case 1:
-                yourRecipeIngredients[0][3] = 3;
+                yourRecipeIngredients[0][3] = 0.5;
                 Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
                 MainMenu();
                 break;
             case 2:
+                yourRecipeIngredients[0][3] = 2;
                 Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 3:
+                yourRecipeIngredients[0][3] = 3;
                 Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 4:
+                yourRecipeIngredients[0][3] = 1;
                 Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
                 MainMenu();
                 break;
             default:
-                Console.WriteLine("Ingredient quantities have been \nReturning to main menu.");
+                Console.WriteLine("No changes were made.\nReturning to main menu.");
                 MainMenu();
                 break;
 
@@ -119,6 +143,7 @@ public void MultiplyFactorial(Recipe yourRecipe)
 ////////// START OF CLASS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class Recipe
 {
+    private string recipeName;
     private object[][] recipeIngredientsArray;
     private string[] recipeStepsArray;
 
@@ -128,13 +153,28 @@ public class Recipe
         {
         }
 
-    public Recipe(int numIngredients, int numSteps)
+    public Recipe(string recipeName, int numIngredients, int numSteps)
         {
+            this.recipeName = recipeName;
             createIngredientsArray(numIngredients);
             createStepsArray(numSteps);
         }
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////     
 
+
+
+    ////  Name Methods  //////////////////////////////////////////////////////////////////////////////////////////////// 
+    public void setRecipeName(string recipeName)
+    {
+        this.recipeName = recipeName;
+    }
+
+    public string getRecipeName()
+    {
+        return this.recipeName;
+    }
+    ////  Name Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
+    
 
 
     ////   Ingredients Methods   ////////////////////////////////////////////////////////////////////////////////////////
@@ -289,7 +329,7 @@ public class Recipe
         {
             return this.recipeStepsArray;
         }
-    ////  Steps Methods  ////////////////////////////////////////////////////////////////////////////////////////////////     
+    ////  Steps Methods  //////////////////////////////////////////////////////////////////////////////////////////////// 
 }
 /////// END OF CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////// END OF CLASS ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
