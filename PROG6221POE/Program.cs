@@ -21,7 +21,7 @@ public class ConsoleRecipe
     public void MainMenu()
     {
 
-        Console.Write("\n\n/////////////////////////////////////////////\nPlease enter the number and only the number\n/////////////////////////////////////////////\n   1.   Create New Recipe (Will Replace Old Recipe) \n   2.   Displays Recipe\n   3.   Multiply by a factor\n/////////////////////////////////////////////\n   >>>   ");
+        Console.Write("\n\n/////////////////////////////////////////////\nPlease enter the number and only the number\n/////////////////////////////////////////////\n   1.   Create New Recipe (Will Replace Old Recipe) \n   2.   Displays Recipe\n   3.   Multiply by a factor\n   4.   Clear current recipe\n/////////////////////////////////////////////\n   >>>   ");
         int inputVal = Convert.ToInt32(Console.ReadLine());
         Console.WriteLine(inputVal);
         switch (inputVal)
@@ -35,6 +35,9 @@ public class ConsoleRecipe
             case 3:
                 MultiplyFactorial(yourRecipe);
                 break;
+            case 4:
+                ClearRecipe();
+                break;
             default:
                 MainMenu();
                 Console.WriteLine("Defaulted!");
@@ -44,29 +47,28 @@ public class ConsoleRecipe
 
     public Recipe GenerateNewRecipe()
     {
-        string recipeName = null;
+        string recipeName = " ";
         int numIngredients = 0;
         int numSteps = 0;
 
         Console.WriteLine("///////////////////");
-        while (recipeName == null)
-        {
-            Console.Write("\nInput the name of your recipe >>>  ");
-            recipeName = Console.ReadLine();
-        }
+            while (String.IsNullOrWhiteSpace(recipeName))
+            {
+                Console.Write("\nInput the name of your recipe >>>  ");
+                recipeName = Console.ReadLine();
+            }
 
-        //turn into try parse
-        while (numIngredients <= 0)
-        {
-            Console.Write("\n\nInput the number of ingredients >>>  ");
-            numIngredients = Convert.ToInt32(Console.ReadLine());
-        }
+            while (numIngredients <= 0)
+            {
+                Console.Write("\n\nInput the number of ingredients >>>  ");
+                numIngredients = Convert.ToInt32(Console.ReadLine());
+            }
 
         while (numSteps <= 0)
-        {
-            Console.Write("\n\nInput the number of steps for your recipe >>>  ");
-            numSteps = Convert.ToInt32(Console.Read());
-        }
+            {
+                Console.Write("\n\nInput the number of steps for your recipe >>>  ");
+                numSteps = Convert.ToInt32(Console.Read());
+            }
         Console.WriteLine("///////////////////");
 
         Recipe returnedRecipe = new Recipe(recipeName, numIngredients, numSteps);
@@ -83,8 +85,8 @@ public class ConsoleRecipe
 
         for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
         {
-            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i, 3]));
-            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i, 0], ingredientQuantity, yourRecipeIngredients[i, 2]);
+            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i,3]));
+            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i,0], ingredientQuantity, yourRecipeIngredients[i,2]);
         }
 
         for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
@@ -102,22 +104,22 @@ public class ConsoleRecipe
         switch (Console.Read())
         {
             case 1:
-                yourRecipeIngredients[0, 3] = 0.5;
+                yourRecipeIngredients[0,3] = 0.5;
                 Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
                 MainMenu();
                 break;
             case 2:
-                yourRecipeIngredients[0, 3] = 2;
+                yourRecipeIngredients[0,3] = 2;
                 Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 3:
-                yourRecipeIngredients[0, 3] = 3;
+                yourRecipeIngredients[0,3] = 3;
                 Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 4:
-                yourRecipeIngredients[0, 3] = 1;
+                yourRecipeIngredients[0,3] = 1;
                 Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
                 MainMenu();
                 break;
@@ -127,6 +129,11 @@ public class ConsoleRecipe
                 break;
 
         }
+    }
+
+    public void ClearRecipe()
+    {
+        this.yourRecipe = new Recipe();
     }
 }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -194,50 +201,33 @@ public class Recipe
             ingredientName = "";
             ingredientQuantity = 0;
             ingredientMeasureUnit = "";
-
             bool satisfied = false;
+
             while (satisfied == false)
             {
+                ingredientName = " ";
+                ingredientQuantity = -1;
+                ingredientMeasureUnit = " ";
+
                 Console.Write("\n\n///////////\nIngredient {0} NAME >> ", i + 1);
                 while (String.IsNullOrWhiteSpace(ingredientName))
                 {
-                    try
-                    {
                         ingredientName = Console.ReadLine();
                         Console.WriteLine(ingredientName);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Please enter a valid value, the output returned an invalid value.");
-                    }
                 }
 
                 Console.Write("\n\nIngredient {0} QUANTITY (without measurement units) >> ", i + 1);
                 while (ingredientQuantity <= 0)
                 {
-                    try
-                    {
                         ingredientQuantity = Convert.ToInt32(Console.ReadLine());
                         Console.WriteLine(ingredientQuantity);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Please enter a valid value, the output returned an invalid value.");
-                    }
                 }
 
                 Console.Write("\n\nIngredient {0} MEASUREMENT UNIT >> ", i + 1);
                 while (String.IsNullOrWhiteSpace(ingredientMeasureUnit))
                 {
-                    try
-                    {
                         ingredientMeasureUnit = Console.ReadLine();
                         Console.WriteLine(ingredientMeasureUnit);
-                    }
-                    catch
-                    {
-                        Console.WriteLine("Please enter a valid value, the output returned an invalid value.");
-                    }
                 }
 
                 Console.Write("\n\nIs this satisfactory? 'Y' to continue or anything else to re-enter ingredient details\n >> {0}, {1} {2}  <<\n >> ", ingredientName, ingredientQuantity, ingredientMeasureUnit);
