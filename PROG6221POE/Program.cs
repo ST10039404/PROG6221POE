@@ -18,9 +18,9 @@ public class ConsoleRecipe
 
     }
 
-public void MainMenu()
+    public void MainMenu()
     {
-        
+
         Console.Write("\n\n/////////////////////////////////////////////\nPlease enter the number and only the number\n/////////////////////////////////////////////\n   1.   Create New Recipe (Will Replace Old Recipe) \n   2.   Displays Recipe\n   3.   Multiply by a factor\n/////////////////////////////////////////////\n   >>>   ");
         int inputVal = Convert.ToInt32(Console.ReadLine());
         Console.WriteLine(inputVal);
@@ -69,13 +69,13 @@ public void MainMenu()
         }
         Console.WriteLine("///////////////////");
 
-        Recipe returnedRecipe = new Recipe(recipeName,numIngredients, numSteps);
+        Recipe returnedRecipe = new Recipe(recipeName, numIngredients, numSteps);
         return returnedRecipe;
     }
 
-public void DisplayRecipe(Recipe yourRecipe)
+    public void DisplayRecipe(Recipe yourRecipe)
     {
-        object[][] yourRecipeIngredients = yourRecipe.getIngredientsArray(); 
+        object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
         string[] yourRecipeSteps = yourRecipe.getStepsArray();
         int ingredientQuantity;
 
@@ -83,41 +83,41 @@ public void DisplayRecipe(Recipe yourRecipe)
 
         for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
         {
-            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i][1]) * Convert.ToInt32(yourRecipeIngredients[i][3]));
-            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i+1, yourRecipeIngredients[i][0], ingredientQuantity , yourRecipeIngredients[i][2]);
+            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i, 3]));
+            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i, 0], ingredientQuantity, yourRecipeIngredients[i, 2]);
         }
-        
+
         for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
         {
-            Console.WriteLine("///////////////////\nStep {0}: {1}", i, yourRecipeSteps[i]);
+            Console.WriteLine("///////////////////\n{0}", yourRecipeSteps[i]);
         }
 
         Console.WriteLine("\n///////////////////\n");
     }
 
-public void MultiplyFactorial(Recipe yourRecipe)
+    public void MultiplyFactorial(Recipe yourRecipe)
     {
-        object[][] yourRecipeIngredients = yourRecipe.getIngredientsArray();
+        object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
         Console.WriteLine("\n///////////////////\nPlease enter the number to multiply your\n   1.   Half Ingredients\n   2.   Double ingredients\n   3.   Triple ingredient quantities\n   4.   Return to normal\n Anything else");
-        switch(Console.Read())
+        switch (Console.Read())
         {
             case 1:
-                yourRecipeIngredients[0][3] = 0.5;
+                yourRecipeIngredients[0, 3] = 0.5;
                 Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
                 MainMenu();
                 break;
             case 2:
-                yourRecipeIngredients[0][3] = 2;
+                yourRecipeIngredients[0, 3] = 2;
                 Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 3:
-                yourRecipeIngredients[0][3] = 3;
+                yourRecipeIngredients[0, 3] = 3;
                 Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
                 MainMenu();
                 break;
             case 4:
-                yourRecipeIngredients[0][3] = 1;
+                yourRecipeIngredients[0, 3] = 1;
                 Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
                 MainMenu();
                 break;
@@ -147,28 +147,26 @@ public void MultiplyFactorial(Recipe yourRecipe)
 public class Recipe
 {
     private string recipeName;
-    //List<object[]> ingredientsArray = new List<object[]>();
-    private static readonly object[] value = { };
-    private object[][] recipeIngredientsArray = new object[][] { };
+    private object[,] recipeIngredientsArray;
     private string[] recipeStepsArray;
 
 
-    ///////  CONSTRUCTORS  /////////////////////////////////////////////////////////////////////////////////////////////////     
+    ///////  CONSTRUCTORS  /////////////////////////////////////////////////////////////////////////////////////////////////    
     public Recipe()
-        {
-        }
+    {
+    }
 
     public Recipe(string recipeName, int numIngredients, int numSteps)
-        {
-            this.recipeName = recipeName;
-            createIngredientsArray(numIngredients);
-            createStepsArray(numSteps);
-        }
-    ///////  CONSTRUCTORS  /////////////////////////////////////////////////////////////////////////////////////////////////   
+    {
+        this.recipeName = recipeName;
+        createIngredientsArray(numIngredients);
+        createStepsArray(numSteps);
+    }
+    ///////  CONSTRUCTORS  /////////////////////////////////////////////////////////////////////////////////////////////////  
 
 
 
-    ////  Name Methods  //////////////////////////////////////////////////////////////////////////////////////////////// 
+    ////  Name Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
     public void setRecipeName(string recipeName)
     {
         this.recipeName = recipeName;
@@ -179,12 +177,14 @@ public class Recipe
         return this.recipeName;
     }
     ////  Name Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
-    
+
 
 
     ////   Ingredients Methods   ////////////////////////////////////////////////////////////////////////////////////////
     public void createIngredientsArray(int numIngredients)
     {
+        this.recipeIngredientsArray = new object[numIngredients, 4];
+
         string ingredientName;
         int ingredientQuantity;
         string ingredientMeasureUnit;
@@ -198,7 +198,7 @@ public class Recipe
             bool satisfied = false;
             while (satisfied == false)
             {
-                Console.Write("\n\n///////////\nIngredient {0} NAME >> ", i);
+                Console.Write("\n\n///////////\nIngredient {0} NAME >> ", i + 1);
                 while (String.IsNullOrWhiteSpace(ingredientName))
                 {
                     try
@@ -212,7 +212,7 @@ public class Recipe
                     }
                 }
 
-                Console.Write("\n\nIngredient {0} QUANTITY (without measurement units) >> ", i);
+                Console.Write("\n\nIngredient {0} QUANTITY (without measurement units) >> ", i + 1);
                 while (ingredientQuantity <= 0)
                 {
                     try
@@ -226,7 +226,7 @@ public class Recipe
                     }
                 }
 
-                Console.Write("\n\nIngredient {0} MEASUREMENT UNIT >> ", i);
+                Console.Write("\n\nIngredient {0} MEASUREMENT UNIT >> ", i + 1);
                 while (String.IsNullOrWhiteSpace(ingredientMeasureUnit))
                 {
                     try
@@ -251,34 +251,25 @@ public class Recipe
                         break;
                 }
             }
-
             setIngredientsObject(i, 0, ingredientName);
             setIngredientsObject(i, 1, ingredientQuantity);
             setIngredientsObject(i, 2, ingredientMeasureUnit);
             setIngredientsObject(i, 3, 1);
-            object[][] testIngredients = getIngredientsArray();
-            Console.WriteLine(testIngredients[i][0]);
-            Console.WriteLine(testIngredients[i][1]);
-            Console.WriteLine(testIngredients[i][2]);
-            Console.WriteLine(testIngredients[i][3]);
-
-            /*
-            this.recipeIngredientsArray[i] = new object[4];
-            this.recipeIngredientsArray[i][0] = ingredientName;
-            this.recipeIngredientsArray[i][1] = ingredientQuantity;
-            this.recipeIngredientsArray[i][2] = ingredientMeasureUnit;
-            this.recipeIngredientsArray[i][3] = 1;*/
-
-            //the recipeIngredientsArrray[i][3] will serve as a multiplier which is linked directly to each recipe with a simplified way of returning the factored amount to normal (for the quantity)
+            object[,] testIngredients = getIngredientsArray();
+            Console.WriteLine(testIngredients[i, 0]);
+            Console.WriteLine(testIngredients[i, 1]);
+            Console.WriteLine(testIngredients[i, 2]);
+            Console.WriteLine(testIngredients[i, 3]);
+            //the recipeIngredientsArrray[i,3] will serve as a multiplier which is linked directly to each recipe with a simplified way of returning the factored amount to normal (for the quantity)
         }
     }
-        
+
 
     public void alterIngredientsArray(int indexAlter, int typeAlter)
-        {
-            object inputValue = null;
-            object savedValue = this.recipeIngredientsArray[indexAlter][typeAlter];
-            string cancelVal = " ";
+    {
+        object inputValue = null;
+        object savedValue = this.recipeIngredientsArray[indexAlter, typeAlter];
+        string cancelVal = " ";
         Console.WriteLine("Please enter the value you would like to be inserted at this location.");
         while (cancelVal != "Y" && inputValue == null)
         {
@@ -295,76 +286,84 @@ public class Recipe
         }
 
         if (cancelVal == "Y" || inputValue == null)
-            {
-                this.recipeIngredientsArray[indexAlter][typeAlter] = savedValue;
-            }
-            else
-                {
-                    this.recipeIngredientsArray[indexAlter][typeAlter] = inputValue;
-                }
-        
+        {
+            this.recipeIngredientsArray[indexAlter, typeAlter] = savedValue;
+        }
+        else
+        {
+            this.recipeIngredientsArray[indexAlter, typeAlter] = inputValue;
         }
 
-    public void setIngredientsArray(object[][] inputArr)
+    }
+
+    public void setIngredientsArray(object[,] inputArr)
     {
         this.recipeIngredientsArray = inputArr;
     }
 
     public void setIngredientsObject(int indexSet, int typeSet, string inputVal)
-        {
-        this.recipeIngredientsArray[indexSet][typeSet] = inputVal;
-        }
+    {
+        this.recipeIngredientsArray[indexSet, typeSet] = inputVal;
+    }
 
     public void setIngredientsObject(int indexSet, int typeSet, int inputVal)
     {
-        this.recipeIngredientsArray[indexSet][typeSet] = inputVal;
+        this.recipeIngredientsArray[indexSet, typeSet] = inputVal;
     }
 
-    public object[][] getIngredientsArray()
-        {
-            return this.recipeIngredientsArray;
-        }
+    public object[,] getIngredientsArray()
+    {
+        return this.recipeIngredientsArray;
+    }
 
     public object getIngredientsObject(int indexGet, int typeGet)
     {
-        return this.recipeIngredientsArray[indexGet][typeGet];
+        return this.recipeIngredientsArray[indexGet, typeGet];
     }
     ////  Ingredients Methods  //////////////////////////////////////////////////////////////////////////////////////////    
 
 
     ////  Steps Methods  ////////////////////////////////////////////////////////////////////////////////////////////////    
     public void createStepsArray(int numSteps)
-        {
+    {
         string continueVal = "Y";
+        string recipeStep = "";
+
         Console.WriteLine("\n///////////");
-            string[] recipeStepsArray = new string[numSteps];
-            for (int i = 0; i < numSteps; i++)
-            {
+        string[] recipeStepsArray = new string[numSteps];
+        for (int i = 0; i < numSteps; i++)
+        {
             while (continueVal.ToUpper().Equals("Y"))
-                {
+            {
                 Console.WriteLine("Please enter step {0}/{1}  >> ", i + 1, numSteps);
-                this.recipeStepsArray[i] += "\nStep" + (i + 1) + " : " + Console.ReadLine();
-                Console.WriteLine("Would you like to change this step? \n(Y) or (N)\n\n // {0} \\\\\n\n      >>", recipeStepsArray[i]);
+                recipeStep = "\nStep" + (i + 1) + " : " + Console.ReadLine();
+                Console.Write("\nWould you like to change this step? \n(Y) or (N)\n\n // {0} \\\\\n\n      >>", recipeStep);
                 continueVal = Console.ReadLine();
                 Console.WriteLine("///////////");
-                }
             }
+            setStepsObject(i, recipeStep);
         }
 
-    public void alterStepsArray(int indexAlter)
-        {
-            this.recipeStepsArray[indexAlter] = Console.ReadLine();
-        }
+    }
 
-    public void setStepsArray(int indexAlter, string inputVal)
+    public void alterStepsObject(int indexAlter)
+    {
+        this.recipeStepsArray[indexAlter] = Console.ReadLine();
+    }
+
+    public void setStepsObject(int indexAlter, string inputVal)
     {
         this.recipeStepsArray[indexAlter] = inputVal;
     }
 
+    public void setStepsArray(string[] inputVal)
+    {
+        this.recipeStepsArray = inputVal;
+    }
     public string[] getStepsArray()
-        {
-            return this.recipeStepsArray;
-        }
-    ////  Steps Methods  //////////////////////////////////////////////////////////////////////////////////////////////// 
+    {
+        return this.recipeStepsArray;
+    }
+    ////  Steps Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
 }
 /////// RECIPE CLASS /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
