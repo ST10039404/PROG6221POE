@@ -4,6 +4,8 @@
 
 using System;
 using System.ComponentModel;
+using System.ComponentModel.Design;
+using System.Reflection;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ConsoleRecipe
@@ -28,21 +30,27 @@ public class ConsoleRecipe
         {
             case 1:
                 this.yourRecipe = GenerateNewRecipe();
+                MainMenu();
                 break;
             case 2:
                 DisplayRecipe(yourRecipe);
+                MainMenu();
                 break;
             case 3:
                 MultiplyFactorial(yourRecipe);
+                MainMenu();
                 break;
             case 4:
                 ClearRecipe();
-                break;
-            default:
                 MainMenu();
-                Console.WriteLine("Defaulted!");
                 break;
-        }
+            case 5:
+                //exit
+                default:
+                Console.WriteLine("Defaulted!");
+                MainMenu();
+                break;
+                }
     }
 
     public Recipe GenerateNewRecipe()
@@ -67,7 +75,7 @@ public class ConsoleRecipe
         while (numSteps <= 0)
             {
                 Console.Write("\n\nInput the number of steps for your recipe >>>  ");
-                numSteps = Convert.ToInt32(Console.Read());
+                numSteps = Convert.ToInt32(Console.ReadLine());
             }
         Console.WriteLine("///////////////////");
 
@@ -77,57 +85,87 @@ public class ConsoleRecipe
 
     public void DisplayRecipe(Recipe yourRecipe)
     {
-        object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
-        string[] yourRecipeSteps = yourRecipe.getStepsArray();
-        int ingredientQuantity;
-
-
-
-        for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
+        if (yourRecipe == null)
         {
-            ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i,3]));
-            Console.WriteLine("///////////////////\nIngredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i,0], ingredientQuantity, yourRecipeIngredients[i,2]);
+            Console.WriteLine("Error Occured: Recipe is null!");
         }
-
-        for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
+        else 
         {
-            Console.WriteLine("///////////////////\n{0}", yourRecipeSteps[i]);
-        }
+            if (yourRecipe.getIngredientsArray() == null || yourRecipe.getStepsArray() == null)
+            {
+                Console.WriteLine("Error occured: Recipe contains nulls");
+                return;
+            }
+            else
+            {
+                object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
+                string[] yourRecipeSteps = yourRecipe.getStepsArray();
+                int ingredientQuantity;
 
-        Console.WriteLine("\n///////////////////\n");
+
+                Console.WriteLine("\n///////////////////");
+                for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
+                {
+                    ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i, 3]));
+                    Console.WriteLine("\nIngredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i, 0], ingredientQuantity, yourRecipeIngredients[i, 2]);
+                }
+                Console.WriteLine("\n///////////////////");
+                for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
+                {
+                    Console.WriteLine("\n{0}", yourRecipeSteps[i]);
+                }
+
+                Console.WriteLine("\n///////////////////\n");
+            }
+        }
     }
 
     public void MultiplyFactorial(Recipe yourRecipe)
     {
-        object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
-        Console.WriteLine("\n///////////////////\nPlease enter the number to multiply your\n   1.   Half Ingredients\n   2.   Double ingredients\n   3.   Triple ingredient quantities\n   4.   Return to normal\n Anything else");
-        switch (Console.Read())
+        if (yourRecipe == null)
         {
-            case 1:
-                yourRecipeIngredients[0,3] = 0.5;
-                Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
-                MainMenu();
-                break;
-            case 2:
-                yourRecipeIngredients[0,3] = 2;
-                Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
-                MainMenu();
-                break;
-            case 3:
-                yourRecipeIngredients[0,3] = 3;
-                Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
-                MainMenu();
-                break;
-            case 4:
-                yourRecipeIngredients[0,3] = 1;
-                Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
-                MainMenu();
-                break;
-            default:
-                Console.WriteLine("No changes were made.\nReturning to main menu.");
-                MainMenu();
-                break;
+            Console.WriteLine("Error Occured: Recipe is null!");
+        }
+        else
+        {
+            if (yourRecipe.getIngredientsArray() == null)
+            {
+                Console.WriteLine("Error occured: Recipe contains nulls");
+                return;
+            }
+            else
+            {
+                object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
+                Console.WriteLine("\n///////////////////\nPlease enter the number to multiply your\n   1.   Half Ingredients\n   2.   Double ingredients\n   3.   Triple ingredient quantities\n   4.   Return to normal\n Anything else");
+                switch (Console.Read())
+                {
+                    case 1:
+                        yourRecipeIngredients[0, 3] = 0.5;
+                        Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
+                        MainMenu();
+                        break;
+                    case 2:
+                        yourRecipeIngredients[0, 3] = 2;
+                        Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
+                        MainMenu();
+                        break;
+                    case 3:
+                        yourRecipeIngredients[0, 3] = 3;
+                        Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
+                        MainMenu();
+                        break;
+                    case 4:
+                        yourRecipeIngredients[0, 3] = 1;
+                        Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
+                        MainMenu();
+                        break;
+                    default:
+                        Console.WriteLine("No changes were made.\nReturning to main menu.");
+                        MainMenu();
+                        break;
 
+                }
+            }
         }
     }
 
@@ -316,11 +354,12 @@ public class Recipe
     ////  Steps Methods  ////////////////////////////////////////////////////////////////////////////////////////////////    
     public void createStepsArray(int numSteps)
     {
+        this.recipeStepsArray = new string[numSteps];
+
         string continueVal = "Y";
         string recipeStep = "";
-
+        
         Console.WriteLine("\n///////////");
-        string[] recipeStepsArray = new string[numSteps];
         for (int i = 0; i < numSteps; i++)
         {
             while (continueVal.ToUpper().Equals("Y"))
@@ -338,7 +377,33 @@ public class Recipe
 
     public void alterStepsObject(int indexAlter)
     {
+        string inputValue = null;
+        string savedValue = this.recipeStepsArray[indexAlter];
+        string cancelVal = " ";
         this.recipeStepsArray[indexAlter] = Console.ReadLine();
+        Console.WriteLine("Please enter the value you would like to be inserted at this location.");
+        while (cancelVal != "Y" && inputValue == null)
+        {
+            try
+            {
+                inputValue = Console.ReadLine();
+            }
+            catch
+            {
+                Console.WriteLine("Please re-enter a valid value you would like to insert under this location.");
+            }
+            Console.WriteLine("Would you like to cancel this operation? 'Y' to cancel. Anything else to continue the operation.");
+            cancelVal = Console.ReadLine();
+        }
+
+        if (cancelVal == "Y" || inputValue == null)
+        {
+            this.recipeStepsArray[indexAlter] = savedValue;
+        }
+        else
+        {
+            this.recipeStepsArray[indexAlter] = inputValue;
+        }
     }
 
     public void setStepsObject(int indexAlter, string inputVal)
