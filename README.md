@@ -4,7 +4,7 @@
 ///									Usage    									    ///
 ///////////////////////////////////////////////////////////////////////////////////////
 //                                                                                   //
-//    1. Run application and you will be into the main menu.                         //
+//    1. Run Program.cs and you will be into the main menu.                          //
 //    2. Create a new recipe using the create recipe                                 //
 //    3. Use any other available function you'd like.                                //
 //                                                                                   //
@@ -19,3 +19,5 @@
 //     .Net framework vers: v4.7.2                                                   //
 //                                                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////
+
+GITHUB LINK: https://github.com/ST10039404/PROG6221POE
