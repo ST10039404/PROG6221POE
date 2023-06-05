@@ -61,7 +61,30 @@ public class ConsoleRecipe
 
     ////  Driver Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
 
+    ////  Delegate Methods  //////////////////////////////////////////////////////////////////////////////////////////////
+    delegate int calCal(object[,] n);
+    delegate void caloriesWarn(int n);
+    calCal del1 = new calCal(calculateCalories);
+    caloriesWarn del2 = new caloriesWarn(checkCalories); 
 
+    public static void checkCalories(int totalCalories)
+    {
+        if (totalCalories > 300)
+            Console.Write("\nNOTICE: The total calories for this recipe exceeds 300");
+    }
+
+    public static int calculateCalories(object[,] yourRecipeIngredients)
+    {
+        int totalCalories = 0;
+
+        for (int i = 0; i < yourRecipeIngredients.GetLength(0); i++)
+        {
+            totalCalories += Convert.ToInt32(yourRecipeIngredients[i, 4]);
+        }
+
+        return totalCalories;
+    }
+    ////  Delegate Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
 
 
     ////  Function Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -147,7 +170,7 @@ public class ConsoleRecipe
                 Console.Write("\n\n///////////////////\n");
                 for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
                 {
-                    switch(yourRecipeIngredients[i, 5])
+                    switch (yourRecipeIngredients[i, 5])
                     {
                         case 1:
                             ingredientGroup = "Starchy Food";
@@ -178,13 +201,12 @@ public class ConsoleRecipe
                 }
                 Console.Write("\n\n///////////////////\nTotal Calories: {0}\n///////////////////\n", ingredientTotalCalories);
 
-                if (ingredientTotalCalories > 300)
-                {
-                    Console.Write("NOTICE: This recipe has over 300 calories.");
-                }
+                //put calorie warning here
+                del2(del1(yourRecipeIngredients));
             }
         }
     }
+
 
 
     //uses the 4th index in every ingredient entry (which when displayed will have an effect on the quantity which shows up) so it would be: quantity * index4 = displayQuantity.
