@@ -7,26 +7,27 @@ using System;
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Reflection;
+using System.Collections.Generic;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class ConsoleRecipe
 {
-    private Recipe yourRecipe = new Recipe();
+    private Recipe internalRecipe = new Recipe();
+    List<Recipe> recipeList = new List<Recipe>();
 
 
     ////  Driver Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
     public static void Main()
     {
         //initializes this class as methods are not static.
-        ConsoleRecipe listOfRecipes = new ConsoleRecipe();
+        ConsoleRecipe recipeApp = new ConsoleRecipe();
         Console.WriteLine("//////////////////////////////////////////////////////////////////////////////\n       >>>       || Hi, Welcome to Sanele's Simple Recipe Maker! ||      <<<        \n//////////////////////////////////////////////////////////////////////////////");
-        listOfRecipes.MainMenu();
+        recipeApp.MainMenu(0);
     }
-    
-    public void MainMenu()
-    {
 
-        Console.Write("\n\n/////////////////////////////////////////////\nPlease enter the number and only the number\n/////////////////////////////////////////////\n   1.   Create New Recipe (Will Replace Old Recipe) \n   2.   Displays Recipe\n   3.   Multiply by a factor\n   4.   Clear current recipe\n/////////////////////////////////////////////\n   >>>   ");
+    public void MainMenu(int currentIndex)
+    {
+        Console.Write("\n\n/////////////////////////////////////////////\nPlease enter the number and only the number\n/////////////////////////////////////////////\nCurrent Selection: { " + recipeList.ElementAt(currentIndex).getRecipeName() + "\n/////////////////////////////////////////////\n   1.   Create New Recipe\n   2.   Displays Recipe\n   3.   Multiply by a factor\n   5.   Print recipe list (Recipe Selection Option After)\n   6.   Clear current recipe\n   7.   Exit program\n/////////////////////////////////////////////\n   >>>   ");
         //takes value for switch
         int inputVal = Convert.ToInt32(Console.ReadLine());
         Console.WriteLine(inputVal);
@@ -34,29 +35,28 @@ public class ConsoleRecipe
         switch (inputVal)
         {
             case 1:
-                this.yourRecipe = GenerateNewRecipe();
-                MainMenu();
+                recipeList.Add(GenerateNewRecipe());
                 break;
             case 2:
-                DisplayRecipe(yourRecipe);
-                MainMenu();
+                DisplayRecipe(recipeList.ElementAt(currentIndex));
                 break;
             case 3:
-                MultiplyFactorial(yourRecipe);
-                MainMenu();
+                MultiplyFactorial(recipeList.ElementAt(currentIndex), currentIndex);
                 break;
             case 4:
-                ClearRecipe();
-                MainMenu();
+                printList(recipeList.ToArray());
                 break;
             case 5:
+                ClearRecipe(recipeList.ElementAt(currentIndex), currentIndex);
+                break;
+            case 6:
                 Environment.Exit(0);
                 break;
             default:
                 Console.WriteLine("Invalid entry! Nothing occurred.");
-                MainMenu();
                 break;
-                }
+        }
+        MainMenu(currentIndex);
     }
 
     ////  Driver Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,7 +128,7 @@ public class ConsoleRecipe
             Console.WriteLine("Error Occured: Recipe is null!");
             return;
         }
-        else 
+        else
         {
             //checks for empty values so it can exit if it is.
             if (yourRecipe.getIngredientsArray() == null || yourRecipe.getStepsArray() == null)
@@ -140,28 +140,50 @@ public class ConsoleRecipe
             {
                 object[,] yourRecipeIngredients = yourRecipe.getIngredientsArray();
                 string[] yourRecipeSteps = yourRecipe.getStepsArray();
+                int ingredientTotalCalories = 0;
                 int ingredientQuantity;
-
+                string ingredientGroup = "";
                 //runs through each index and writes them out into the console.
-                Console.WriteLine("\n///////////////////");
+                Console.Write("\n\n///////////////////\n");
                 for (int i = 0; i < yourRecipe.getIngredientsArray().Length; i++)
                 {
+                    switch(yourRecipeIngredients[i, 5])
+                    {
+                        case 1:
+                            ingredientGroup = "Starchy Food";
+                            break;
+                        case 2:
+                            ingredientGroup = "Vegetables and Fruits";
+                            break;
+                        case 3:
+                            ingredientGroup = "Dairy Products";
+                            break;
+                        case 4:
+                            ingredientGroup = "Meat/Chicken/Fish";
+                            break;
+                        case 5:
+                            ingredientGroup = "Fats and Oils";
+                            break;
+                    }
+
+                    ingredientTotalCalories += Convert.ToInt32(yourRecipeIngredients[i, 4]);
+
                     ingredientQuantity = (Convert.ToInt32(yourRecipeIngredients[i, 1]) * Convert.ToInt32(yourRecipeIngredients[i, 3]));
-                    Console.WriteLine("Ingredient {0}: {1} {2} {3}", i + 1, yourRecipeIngredients[i, 0], ingredientQuantity, yourRecipeIngredients[i, 2]);
+                    Console.Write("\nIngredient {0}: {1} {2} {3}, Calories: {4}, Food Group: {5}", i + 1, yourRecipeIngredients[i, 0], ingredientQuantity, yourRecipeIngredients[i, 2], yourRecipeIngredients[i, 4], ingredientGroup);
                 }
-                Console.WriteLine("\n///////////////////");
+                Console.Write("///////////////////\n\n///////////////////\n");
                 for (int i = 0; i < yourRecipe.getStepsArray().Length; i++)
                 {
-                    Console.WriteLine("{0}", yourRecipeSteps[i]);
+                    Console.Write("\n{0}", yourRecipeSteps[i]);
                 }
-                Console.WriteLine("\n///////////////////\n");
+                Console.Write("\n\n///////////////////\nTotal Calories: {0}\n///////////////////\n", ingredientTotalCalories);
             }
         }
     }
 
-    
+
     //uses the 4th index in every ingredient entry (which when displayed will have an effect on the quantity which shows up) so it would be: quantity * index4 = displayQuantity.
-    public void MultiplyFactorial(Recipe yourRecipe)
+    public void MultiplyFactorial(Recipe yourRecipe, int currentIndex)
     {
         //checks for empty recipe so it can exit if it is.
         if (yourRecipe == null)
@@ -186,26 +208,21 @@ public class ConsoleRecipe
                     case 1:
                         yourRecipeIngredients[0, 3] = 0.5;
                         Console.WriteLine("Ingredient quantities have been halved\nReturning to main menu.");
-                        MainMenu();
                         break;
                     case 2:
                         yourRecipeIngredients[0, 3] = 2;
                         Console.WriteLine("Ingredient quantities have been doubled\nReturning to main menu.");
-                        MainMenu();
                         break;
                     case 3:
                         yourRecipeIngredients[0, 3] = 3;
                         Console.WriteLine("Ingredient quantities have been tripled\nReturning to main menu.");
-                        MainMenu();
-                        break;
+                       break;
                     case 4:
                         yourRecipeIngredients[0, 3] = 1;
                         Console.WriteLine("Ingredient quantities have been returned to normal\nReturning to main menu.");
-                        MainMenu();
                         break;
                     default:
                         Console.WriteLine("No changes were made.\nReturning to main menu.");
-                        MainMenu();
                         break;
 
                 }
@@ -214,10 +231,22 @@ public class ConsoleRecipe
     }
 
     //turns yourRecipe into a new Recipe which has no entries and no size.
-    public void ClearRecipe()
+    public void ClearRecipe(Recipe yourRecipe, int currentIndex)
     {
-        this.yourRecipe = new Recipe();
+        recipeList.RemoveAt(currentIndex);
         Console.WriteLine("Recipe is now empty.");
+    }
+
+    //prints array of recipes.
+    public void printList(Recipe[] recipeArray)
+    {
+        string output = "\n\n\n///////////\nRecipe List\n///////////";
+        for (int i = 0; i < recipeArray.Length; i++)
+        {
+            output += "\n"+(i + 1)+".  "+recipeArray[i].getRecipeName();
+        }
+        output += "\n///////////\nRecipe List End\n///////////\n";
+        Console.Write(output);
     }
     ////  Function Methods  ////////////////////////////////////////////////////////////////////////////////////////////////
 }

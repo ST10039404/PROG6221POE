@@ -53,11 +53,13 @@ namespace PROG6221POE
         ////   Ingredients Methods   ////////////////////////////////////////////////////////////////////////////////////////
         public void createIngredientsArray(int numIngredients)
         {
-            this.recipeIngredientsArray = new object[numIngredients, 4];
+            this.recipeIngredientsArray = new object[numIngredients, 6];
 
             string ingredientName;
             int ingredientQuantity;
             string ingredientMeasureUnit;
+            int ingredientCalories;
+            int ingredientFoodGroup;
 
             for (int i = 0; i < numIngredients; i++)
             {
@@ -65,6 +67,8 @@ namespace PROG6221POE
                 ingredientName = " ";
                 ingredientQuantity = -1;
                 ingredientMeasureUnit = " ";
+                ingredientCalories = -1;
+                ingredientFoodGroup = -1;
                 bool satisfied = false;
                 //as long as user doesent enter Y when asking if they are satisfied, this loop will continously ask for details regarding this step.
                 while (satisfied == false)
@@ -72,6 +76,8 @@ namespace PROG6221POE
                     ingredientName = " ";
                     ingredientQuantity = -1;
                     ingredientMeasureUnit = " ";
+                    ingredientCalories = -1;
+                    ingredientFoodGroup = -1;
 
                     Console.Write("\n\n///////////\nIngredient {0} NAME \n  >> ", i + 1);
                     //checks for nulls (not really useful) but also checks if its a white space (which would be illogical) and uses that as the reason to continue asking for a new value.
@@ -97,6 +103,22 @@ namespace PROG6221POE
                         Console.WriteLine(ingredientMeasureUnit);
                     }
 
+                    Console.Write("\n\nIngredient {0} CALORIE QUANTITY \n  >> ", i + 1);
+                    //checks for nulls (not really useful) but also checks if its a white space (which would be illogical) and uses that as the reason to continue asking for a new value.
+                    while (String.IsNullOrWhiteSpace(ingredientMeasureUnit))
+                    {
+                        ingredientMeasureUnit = Console.ReadLine();
+                        Console.WriteLine(ingredientCalories);
+                    }
+
+                    Console.Write("\n\nIngredient {0} FOOD GROUP (Select Number)\n 1. Starchy Food\n 2. Vegetables and Fruits\n 3. Dairy Product\n 4. Meat/Chicken/Fish\n 5. Fats and Oils\n  >> ", i + 1);
+                    //checks for nulls (not really useful) but also checks if its a white space (which would be illogical) and uses that as the reason to continue asking for a new value.
+                    while (ingredientFoodGroup <= 0 || ingredientFoodGroup > 5)
+                    {
+                        ingredientMeasureUnit = Console.ReadLine();
+                        Console.WriteLine(ingredientFoodGroup);
+                    }
+
                     Console.Write("\n\nIs this satisfactory? 'Y' to continue or anything else to re-enter ingredient details\n >> {0}, {1} {2}  <<\n  >> ", ingredientName, ingredientQuantity, ingredientMeasureUnit);
                     switch (Console.ReadLine())
                     {
@@ -113,6 +135,8 @@ namespace PROG6221POE
                 setIngredientsObject(i, 1, ingredientQuantity);
                 setIngredientsObject(i, 2, ingredientMeasureUnit);
                 setIngredientsObject(i, 3, 1);
+                setIngredientsObject(i, 5, ingredientCalories);
+                setIngredientsObject(i, 6, ingredientFoodGroup);
                 //the recipeIngredientsArrray[i,3] will serve as a multiplier which is linked directly to displaying of each recipe with a simplified way of changing factored amount or returning the factored amount to normal (for the quantity)
             }
         }
