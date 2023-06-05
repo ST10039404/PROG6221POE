@@ -177,6 +177,11 @@ public class ConsoleRecipe
                     Console.Write("\n{0}", yourRecipeSteps[i]);
                 }
                 Console.Write("\n\n///////////////////\nTotal Calories: {0}\n///////////////////\n", ingredientTotalCalories);
+
+                if (ingredientTotalCalories > 300)
+                {
+                    Console.Write("NOTICE: This recipe has over 300 calories.");
+                }
             }
         }
     }
