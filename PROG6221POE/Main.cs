@@ -65,14 +65,16 @@ namespace PROG6221POE
 
         ////  Delegate Methods  //////////////////////////////////////////////////////////////////////////////////////////////
         delegate int calCal(object[,] n);
-        delegate void caloriesWarn(int n);
+        delegate string caloriesWarn(int n);
         calCal del1 = new calCal(calculateCalories);
         caloriesWarn del2 = new caloriesWarn(checkCalories);
 
-        public static void checkCalories(int totalCalories)
+        public static string checkCalories(int totalCalories)
         {
             if (totalCalories > 300)
-                Console.Write("\nNOTICE: The total calories for this recipe exceeds 300");
+                return "NOTICE: The total calories for this recipe exceeds 300";
+            else
+                return "";
         }
 
         public static int calculateCalories(object[,] yourRecipeIngredients)
@@ -204,7 +206,7 @@ namespace PROG6221POE
                     Console.Write("\n\n///////////////////\nTotal Calories: {0}\n///////////////////\n", ingredientTotalCalories);
 
                     //put calorie warning here
-                    del2(del1(yourRecipeIngredients));
+                    Console.WriteLine(del2(del1(yourRecipeIngredients)));
                 }
             }
         }
