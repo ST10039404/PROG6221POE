@@ -69,6 +69,7 @@ namespace PROG6221POE
         calCal del1 = new calCal(calculateCalories);
         caloriesWarn del2 = new caloriesWarn(checkCalories);
 
+        //checks if calories are over 300 and returns a string.
         public static string checkCalories(int totalCalories)
         {
             if (totalCalories > 300)
@@ -77,6 +78,7 @@ namespace PROG6221POE
                 return "";
         }
 
+        //checks each calorie value in an ingredients array and 
         public static int calculateCalories(object[,] yourRecipeIngredients)
         {
             int totalCalories = 0;
