@@ -1,7 +1,7 @@
 namespace POETesting
 {
     [TestClass]
-    public class UnitTest1
+    public class POETest
     {
         [TestMethod]
         public void CalculateCalorieTest()
